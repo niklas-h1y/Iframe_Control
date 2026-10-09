@@ -11,7 +11,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const hasSandbox = firstFrame.hasAttribute('sandbox');
     const sandboxValue = firstFrame.getAttribute('sandbox') || "";
     
-    // Split flags into clean iterable array items
     const tokens = sandboxValue.split(/\s+/).filter(t => t.length > 0);
 
     sendResponse({
