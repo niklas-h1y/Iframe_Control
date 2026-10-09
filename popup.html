@@ -2,28 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>iFrame Permissions</title>
+  <title>iFrame Permission Master</title>
   <style>
-    body { font-family: sans-serif; width: 220px; padding: 10px; background: #f6f8fa; }
-    h3 { margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-    .toggle-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .label { font-size: 12px; }
-    .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      width: 280px;
+      padding: 10px;
+      margin: 0;
+      background-color: #f6f8fa;
+      color: #24292f;
+    }
+    h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      border-bottom: 1px solid #d0d7de;
+      padding-bottom: 6px;
+    }
+    .category {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #57606a;
+      margin: 12px 0 6px 0;
+      border-bottom: 1px dashed #d0d7de;
+      padding-bottom: 2px;
+    }
+    .toggle-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .label {
+      font-size: 12px;
+      max-width: 200px;
+      word-wrap: break-word;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
+      flex-shrink: 0;
+    }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .2s; border-radius: 20px; }
-    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .2s;
+      border-radius: 20px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
     input:checked + .slider { background-color: #2da44e; }
     input:checked + .slider:before { transform: translateX(14px); }
-    button { width: 100%; background: #0969da; color: white; border: none; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 5px; }
+    
+    .scroll-area {
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    button {
+      width: 100%;
+      background-color: #0969da;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover { background-color: #0c57d0; }
   </style>
 </head>
 <body>
-  <h3>iFrame Sandbox Flags</h3>
-  <div class="toggle-container"><span class="label">Allow Scripts</span><label class="switch"><input type="checkbox" id="allow-scripts" checked><span class="slider"></span></label></div>
-  <div class="toggle-container"><span class="label">Allow Same-Origin</span><label class="switch"><input type="checkbox" id="allow-same-origin" checked><span class="slider"></span></label></div>
-  <div class="toggle-container"><span class="label">Allow Popups</span><label class="switch"><input type="checkbox" id="allow-popups" checked><span class="slider"></span></label></div>
-  <div class="toggle-container"><span class="label">Allow Forms</span><label class="switch"><input type="checkbox" id="allow-forms" checked><span class="slider"></span></label></div>
-  <button id="apply-btn">Apply to Page</button>
+  <h3>iFrame Permissions</h3>
+  
+  <div class="scroll-area">
+    <!-- CORE EXECUTION -->
+    <div class="category">Core Execution</div>
+    <div class="toggle-container"><span class="label">Allow Scripts</span><label class="switch"><input type="checkbox" id="allow-scripts" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Same-Origin</span><label class="switch"><input type="checkbox" id="allow-same-origin" checked><span class="slider"></span></label></div>
+    
+    <!-- NAVIGATION & POPUPS -->
+    <div class="category">Navigation & Windows</div>
+    <div class="toggle-container"><span class="label">Allow Popups</span><label class="switch"><input type="checkbox" id="allow-popups" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Popups to Escape Sandbox</span><label class="switch"><input type="checkbox" id="allow-popups-to-escape-sandbox" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Top Navigation</span><label class="switch"><input type="checkbox" id="allow-top-navigation" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Top Nav by User Activation</span><label class="switch"><input type="checkbox" id="allow-top-navigation-by-user-activation" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Modals</span><label class="switch"><input type="checkbox" id="allow-modals" checked><span class="slider"></span></label></div>
+
+    <!-- INTERACTION & INPUT -->
+    <div class="category">Interactions & Forms</div>
+    <div class="toggle-container"><span class="label">Allow Forms</span><label class="switch"><input type="checkbox" id="allow-forms" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Pointer Lock (Mouse capture)</span><label class="switch"><input type="checkbox" id="allow-pointer-lock" checked><span class="slider"></span></label></div>
+    
+
+    <!-- DEVICE HARDWARE & MEDIA -->
+    <div class="category">Hardware & Media API</div>
+    <div class="toggle-container"><span class="label">Allow Downloads</span><label class="switch"><input type="checkbox" id="allow-downloads" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Orientation Lock</span><label class="switch"><input type="checkbox" id="allow-orientation-lock" checked><span class="slider"></span></label></div>
+    <div class="toggle-container"><span class="label">Allow Presentation Mode</span><label class="switch"><input type="checkbox" id="allow-presentation" checked><span class="slider"></span></label></div>
+
+    <!-- ADVANCED & STORAGE EXPERIMENTS -->
+    <div class="category">Advanced Capabilities</div>
+    <div class="toggle-container"><span class="label">Allow Storage Access API</span><label class="switch"><input type="checkbox" id="allow-storage-access-by-user-activation" checked><span class="slider"></span></label></div>
+  </div>
+
+  <button id="apply-btn">Apply Master Controls</button>
+
   <script src="popup.js"></script>
 </body>
 </html>
