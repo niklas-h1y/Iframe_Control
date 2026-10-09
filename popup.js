@@ -3,8 +3,6 @@ const tokenMap = {
   'allow-same-origin': 'allow-same-origin',
   'allow-popups': 'allow-popups',
   'allow-popups-to-escape-sandbox': 'allow-popups-to-escape-sandbox',
-  'allow-top-navigation': 'allow-top-navigation',
-  'allow-top-navigation-by-user-activation': 'allow-top-navigation-by-user-activation',
   'allow-modals': 'allow-modals',
   'allow-top-navigation-to-custom-protocols': 'allow-top-navigation-to-custom-protocols',
   'allow-forms': 'allow-forms',
@@ -15,11 +13,9 @@ const tokenMap = {
   'allow-storage-access-by-user-activation': 'allow-storage-access-by-user-activation'
 };
 
-// Automatically run detector when opening popup
 document.addEventListener('DOMContentLoaded', runDetection);
 document.getElementById('detect-btn').addEventListener('click', runDetection);
 
-// Select All / Deselect All logic
 document.getElementById('select-all-btn').addEventListener('click', () => setAllToggles(true));
 document.getElementById('deselect-all-btn').addEventListener('click', () => setAllToggles(false));
 
@@ -30,7 +26,6 @@ function setAllToggles(status) {
   });
 }
 
-// Apply configuration
 document.getElementById('apply-btn').addEventListener('click', () => {
   let activeTokens = [];
   for (const [elementId, tokenValue] of Object.entries(tokenMap)) {
@@ -47,7 +42,6 @@ document.getElementById('apply-btn').addEventListener('click', () => {
   });
 });
 
-// Detection execution routine
 function runDetection() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (!tabs || !tabs[0]) return;
@@ -66,15 +60,12 @@ function runDetection() {
 
       statusText.innerText = `🔍 Found ${response.count} iframe(s). Showing properties of Frame #1:`;
       
-      // If the iframe has a sandbox attribute, update toggles to match it
       if (response.hasSandboxAttribute) {
         const allowedTokens = response.currentTokens;
-        // Sync popup switches to match target frame state
         Object.entries(tokenMap).forEach(([id, val]) => {
           document.getElementById(id).checked = allowedTokens.includes(val);
         });
       } else {
-        // No sandbox layout means EVERYTHING is currently uninhibited/allowed
         statusText.innerText = `🔍 Found ${response.count} iframe(s) (Unsandboxed = Fully Unlocked!)`;
         setAllToggles(true);
       }
