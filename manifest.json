@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "iFrame Ultimate Permission Master Pro",
-  "version": "3.0",
-  "description": "Total control, bulk selection, and active detection of all iframe sandbox permissions.",
+  "name": "iFrame Permission Master Pro",
+  "version": "3.1",
+  "description": "Safe control, bulk selection, and active detection of iframe sandbox permissions without top-navigation hazards.",
   "permissions": [
     "activeTab"
   ],
