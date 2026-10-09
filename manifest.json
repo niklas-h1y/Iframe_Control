@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "iFrame Ultimate Permission Master",
-  "version": "2.0",
-  "description": "Total control over all 14 HTML5 iframe sandbox permission tokens.",
+  "name": "iFrame Ultimate Permission Master Pro",
+  "version": "3.0",
+  "description": "Total control, bulk selection, and active detection of all iframe sandbox permissions.",
   "permissions": [
     "activeTab"
   ],
