@@ -1,11 +1,9 @@
-document.getElementById('apply-btn').addEventListener('click', async () => {
-  // Get toggle states
+document.getElementById('apply-btn').addEventListener('click', () => {
   const allowScripts = document.getElementById('allow-scripts').checked;
   const allowSameOrigin = document.getElementById('allow-same-origin').checked;
   const allowPopups = document.getElementById('allow-popups').checked;
   const allowForms = document.getElementById('allow-forms').checked;
 
-  // Build the sandbox token string based on unchecked constraints
   let flags = [];
   if (allowScripts) flags.push('allow-scripts');
   if (allowSameOrigin) flags.push('allow-same-origin');
@@ -14,37 +12,15 @@ document.getElementById('apply-btn').addEventListener('click', async () => {
   
   const sandboxString = flags.join(' ');
 
-  // Get current active tab
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  
-  if (!tab) return;
-
-  // Inject script to update iframes dynamically
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    func: updateIframes,
-    args: [sandboxString]
+  // Query the active tab and send the message straight to content.js
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (!tabs || !tabs[0]) return;
+    
+    chrome.tabs.sendMessage(tabs[0].id, { action: "SET_IFRAME_PERMISSIONS", sandboxString: sandboxString }, (response) => {
+      // Handle optional response confirmation if needed
+      if (chrome.runtime.lastError) {
+        alert("Please refresh the webpage before using the extension for the first time.");
+      }
+    });
   });
 });
-
-// This function runs directly inside the webpage context
-function updateIframes(sandboxString) {
-  const iframes = document.querySelectorAll('iframe');
-  
-  if (iframes.length === 0) {
-    alert('No iframes found on this page.');
-    return;
-  }
-
-  iframes.forEach(iframe => {
-    // Set the new restrictions
-    iframe.setAttribute('sandbox', sandboxString);
-    
-    // Refresh the iframe to apply the new sandbox rule changes
-    const src = iframe.src;
-    iframe.src = '';
-    iframe.src = src;
-  });
-
-  alert(`Applied permissions to ${iframes.length} iframe(s).`);
-}
