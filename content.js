@@ -3,22 +3,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const iframes = document.querySelectorAll('iframe');
     
     if (iframes.length === 0) {
-      alert('No iFrames found on this page.');
+      alert('No iFrames discovered on this tab target.');
       sendResponse({ status: "no_iframes" });
       return;
     }
 
     iframes.forEach(iframe => {
-      // Set the sandbox limits
+      // Overwrite previous sandbox configuration with complete master tokens
       iframe.setAttribute('sandbox', message.sandboxString);
       
-      // Force reload the individual iframe to commit the sandbox context change
+      // Flush and reset frame rendering engine context execution layers
       const currentSrc = iframe.src;
       iframe.src = '';
-      iframe.src = currentSrc;
+      // Tiny timeout to guarantee the browser updates the DOM attributes before refetching src
+      setTimeout(() => {
+        iframe.src = currentSrc;
+      }, 10);
     });
 
-    alert(`Applied sandbox permissions to ${iframes.length} iFrame(s).`);
+    alert(`Master Security updated across ${iframes.length} iFrame element(s).`);
     sendResponse({ status: "success", count: iframes.length });
   }
 });
