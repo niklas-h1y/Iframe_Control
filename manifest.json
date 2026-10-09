@@ -1,18 +1,19 @@
 {
   "manifest_version": 3,
   "name": "iFrame Permission Manager",
-  "version": "1.0",
-  "description": "Easily toggle and control permissions for all iframes on the page.",
+  "version": "1.1",
+  "description": "Control iFrame permissions via runtime content messaging.",
   "permissions": [
-    "activeTab",
-    "scripting"
+    "activeTab"
   ],
   "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
     }
-  }
+  ]
 }
