@@ -1,27 +1,43 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "SET_IFRAME_PERMISSIONS") {
-    const iframes = document.querySelectorAll('iframe');
-    
+  const iframes = document.querySelectorAll('iframe');
+
+  if (message.action === "DETECT_IFRAME_PERMISSIONS") {
     if (iframes.length === 0) {
-      alert('No iFrames discovered on this tab target.');
-      sendResponse({ status: "no_iframes" });
-      return;
+      sendResponse({ count: 0 });
+      return true;
+    }
+
+    const firstFrame = iframes[0];
+    const hasSandbox = firstFrame.hasAttribute('sandbox');
+    const sandboxValue = firstFrame.getAttribute('sandbox') || "";
+    
+    // Split flags into clean iterable array items
+    const tokens = sandboxValue.split(/\s+/).filter(t => t.length > 0);
+
+    sendResponse({
+      count: iframes.length,
+      hasSandboxAttribute: hasSandbox,
+      currentTokens: tokens
+    });
+    return true;
+  }
+
+  if (message.action === "SET_IFRAME_PERMISSIONS") {
+    if (iframes.length === 0) {
+      alert('No active iframe hooks discovered to rewrite.');
+      return true;
     }
 
     iframes.forEach(iframe => {
-      // Overwrite previous sandbox configuration with complete master tokens
       iframe.setAttribute('sandbox', message.sandboxString);
       
-      // Flush and reset frame rendering engine context execution layers
       const currentSrc = iframe.src;
       iframe.src = '';
-      // Tiny timeout to guarantee the browser updates the DOM attributes before refetching src
       setTimeout(() => {
         iframe.src = currentSrc;
-      }, 10);
+      }, 15);
     });
 
-    alert(`Master Security updated across ${iframes.length} iFrame element(s).`);
-    sendResponse({ status: "success", count: iframes.length });
+    alert(`Successfully applied permissions across ${iframes.length} element(s).`);
   }
 });
